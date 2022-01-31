@@ -93,7 +93,7 @@ struct PadTensor {
     *output = Tensor(input.dtype(), output_shape);
     typename TTypes<T, num_dims>::Tensor inputs = input.tensor<T, num_dims>();
     T pad_value(Tensor(input.dtype(), {0}).flat<T>(0))); // use 0
-    output->tensor<T, num_dims>() = inputs.pad(padding, 0);
+    output->tensor<T, num_dims>() = inputs.pad(padding, pad_value);
     return Status::OK();
   }
 };
