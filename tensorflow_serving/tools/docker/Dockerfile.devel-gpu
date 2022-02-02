@@ -145,7 +145,7 @@ ENV TMP="/tmp"
 
 # Download TF Serving sources (optionally at specific commit).
 WORKDIR /tensorflow-serving
-RUN curl -sSL --retry 5 https://github.com/cohere-ai/serving/tarball/e1d3c8f744d9ce99b61fbda718916b2e07285112 | tar --strip-components=1 -xzf -
+RUN curl -sSL --retry 5 https://github.com/cohere-ai/serving/tarball/5e456b3a | tar --strip-components=1 -xzf -
 
 FROM base_build as binary_build
 # Build, and install TensorFlow Serving
