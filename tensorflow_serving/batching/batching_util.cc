@@ -91,8 +91,10 @@ struct PadTensor {
           "Got empty tensor in batch of non-empty tensors.");
     }
     *output = Tensor(input.dtype(), output_shape);
+    Tensor optionally_padded_tensor;
+    optionally_padded_tensor = tensor(input.dtype(), {0})
     typename TTypes<T, num_dims>::Tensor inputs = input.tensor<T, num_dims>();
-    T pad_value(output.flat<T>(0)); // use 0
+    T pad_value(optionally_padded_tensor.flat<T>(0)); // use 0
     output->tensor<T, num_dims>() = inputs.pad(padding, pad_value);
     return Status::OK();
   }
