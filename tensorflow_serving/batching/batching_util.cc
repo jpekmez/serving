@@ -93,11 +93,11 @@ struct PadTensor {
     *output = Tensor(input.dtype(), output_shape);
     typename TTypes<T, num_dims>::Tensor inputs = input.tensor<T, num_dims>();
 
-    Tensor pad_tensor = Tensor(input.dtype(), TensorShape({}));
+    Tensor pad_tensor = Tensor(input.dtype(), TensorShape({1}));
     Tensor zero_value(0);
     pad_tensor.UnsafeCopyFromInternal(
         zero_value, pad_tensor.dtype(), pad_tensor.shape());
-    T pad_value(pad_tensor.flat<T>()(0));  // using existing values in padding
+    T pad_value(pad_tensor.flat<T>()(0));  // using the zeroed bytes
 
     output->tensor<T, num_dims>() = inputs.pad(padding, pad_value);
     return Status::OK();
