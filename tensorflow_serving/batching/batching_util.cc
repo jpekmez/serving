@@ -94,7 +94,7 @@ struct PadTensor {
     typename TTypes<T, num_dims>::Tensor inputs = input.tensor<T, num_dims>();
 
     Tensor pad_tensor = Tensor(input.dtype(), TensorShape({1}));
-    Tensor zero_value(0);
+    Tensor zero_value(0.0f);
     pad_tensor.UnsafeCopyFromInternal(
         zero_value, pad_tensor.dtype(), pad_tensor.shape());
     T pad_value(pad_tensor.flat<T>()(0));  // using the zeroed bytes
