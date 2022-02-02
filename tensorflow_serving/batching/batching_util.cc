@@ -93,11 +93,13 @@ struct PadTensor {
     *output = Tensor(input.dtype(), output_shape);
     typename TTypes<T, num_dims>::Tensor inputs = input.tensor<T, num_dims>();
 
-    // array<std::pair<ptrdiff_t, ptrdiff_t>, 4> paddings;
-    // paddings[0] = std::make_pair(0, 0);
+    Tensor pad_tensor = Tensor(input.dtype(), TensorShape({}));
+    Tensor zero_value(0);
+    pad_tensor.UnsafeCopyFromInternal(
+        zero_value, pad_tensor.dtype(), pad_tensor.shape());
+    T pad_value(pad_tensor.flat<T>()(0));  // using existing values in padding
 
-
-    output->tensor<T, num_dims>() = inputs.pad(padding, 0);
+    output->tensor<T, num_dims>() = inputs.pad(padding, pad_value);
     return Status::OK();
   }
 };
