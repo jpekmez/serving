@@ -1,3 +1,128 @@
+# Release 2.9.1
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* This release is based on TF version 2.9.0
+
+# Release 2.6.5
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* Rollback incompatible C++17 changes. (commit: ba0fa72b61bc2c42388b815253ba72e6830f03cf)
+* Roll forward with std::optional -> absl::optional. (commit: 009dac683bf84165b84702d177bb9a021ebef728)
+* Replace STL algorithm call with a container method (performance-inefficient-algorithm). (commit: f5bc09998e0043ce72d34b14104379163048406c)
+* Remove unused "using" decl. (commit: ffcc4a16c76c4fa1189edd9682fc486442a33e52)
+* Move status_proto to public visible apis/ (it being used by public API protos) (commit: 7f894c79fce5e58758f3cb49e858a16e3602ae80)
+* Move core/logging.proto -> apis/logging.proto (commit: 37c64b8820a923aafc1b5c8bf264fd5cce5224f3)
+* Update TF Text to v2.5.0. (commit: 48e5a9e23a1e0b2951b77c3e8f9832193d9b1851)
+* Adding python targets for config protos (commit: 757c3a6b6c8a03731dc73ff758f69a61aeddcf67)
+* Remove experimental tags from uses of gRPC C++ callback API. (commit: b355023b034ca6ef72b507920d9de2a02e0f4a2a)
+* Add new --use_alts_credentials flag, to enable building secure credentials using Google ALTS. (commit: ceba636bb7c5c98bde35d1818fd033b36300fffe)
+* Enable HTTP PATCH support in evhttp_server (commit: 6cbc4a9eb419c8078c3a4e791381cda70dd8fc78)
+
+# Release 2.9.0
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* Do not report successful loads that are cancelled, unload immediately instead. (commit: 923269955f5582cc26d0454992afa5c888a9377f)
+* Add a lock to avoid race condition on memoized_resource_estimate_. (commit: 83959e364e7ff1234bf47a5d8139677d1bdb18c1)
+* Update Resnet model used in K8S tutorial (commit: 6e76f6a9460bf2d37630f025fcfd3e06c4230fee)
+* Prepare for development of new http client API. (commit: 78e94e99650deae956fe20dffa9932a72ec7d765)
+* Integrate TPU initialization changes into TF Serving. (commit: 6549ef2136940cd98cfbb9ee0e29221d86101d16)
+* Allow max_execution_batch_size to be actually used by allowing (commit: 48a699a2fd32404c4b19f55077a1fb29112a0afe)
+* Delete batch_schedulers_ before thread_pool_name_ (commit: 2837812341e7c98be4717e5901286692a5dcc02a)
+* Add missing NVIDIA repository key. (commit: c0998e13451b9b83c9bdf157dd3648b2272dac59)
+* Bump minimum bazel version 5.1.1, to match with TF and root.workspace (commit: 8a02874cee6957e5817960613627a549bd80a6e9)
+* Update to use C++17 (commit: 7166e2efc6b7e63c908515c6a53d0e4fe8fa0aae)
+* Update tensorflow_model_server_test to depend on the pip installed tensorflow. (commit: 04b8676730a882cab61b7772097f2c23c0447ef9)
+* This release is based on TF version 2.9.0
+
+# Release 2.8.2
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* Replace int64 with int64_t and uint64 with uint64_t. (commit: 21360c763767823b82768ce42c5c90c0c9012601)
+* update to latest benchmark API changes (commit: 860e1013385289ad3f9eb4d854b55c23e7cb8087)
+* This release is based on TF version 2.8.2
+
+# Release 2.8.0
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* Force-allow labels for the models which are not yet loaded. The feature is meant to be used for non-prod environments only as it may break the serving until relevant models are not loaded yet. (commit: 988bbce80038ac0b7141dcb4413124ba486344cf)
+* Update CreateRPC API interface. (commit: 2e7ca90c18f310c542ed0dcde92d676db6454285)
+* Add `--tensorflow_session_config_file` flag to tf serving model server to support custom SessionConfig (commit: 342a8088524c33f68e3eb4d66800f01a777ceb38)
+* Add `--experimental_cc_shared_library` by default to all builds. (commit: 49b138fdd4c0fb7170736193063c6f03dfb4dba4)
+* Add --num_request_iterations_for_warmup flag (fixes #1949) (commit: 2a55aec18cc1923ece84c7fcf701185306ef99b1)
+
+# Release 2.5.4
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* This release is based on TF version 2.5.3
+
+# Release 2.6.3
+
+## Major Features and Improvements
+
+* No major features or improvements.
+
+## Breaking Changes
+
+* No breaking changes
+
+## Bug Fixes and Other Changes
+
+* This release is based on TF version 2.6.3
+
 # Release 2.6.0
 
 ## Major Features and Improvements

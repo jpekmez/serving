@@ -260,15 +260,15 @@ class BatchingSession : public ServingSession {
                     std::unique_ptr<Batch<BatchingSessionTask>> batch);
 
   const BatchingSessionOptions options_;
+  // The name of the thread pool of the underlying batch scheduler. It is used
+  // for monitoring purpose, and can be empty if not known.
+  const std::string thread_pool_name_;
 
   std::unique_ptr<Session> wrapped_;
   std::unordered_map<TensorSignature,
                      std::unique_ptr<BatchScheduler<BatchingSessionTask>>,
                      HashTensorSignature, EqTensorSignature>
       batch_schedulers_;
-  // The name of the thread pool of the underlying batch scheduler. It is used
-  // for monitoring purpose, and can be empty if not known.
-  const std::string thread_pool_name_;
 
   // If set, default_scheduler_creator_ is used when the input signature does
   // not match any existing signature defined during model load. This helps
@@ -1012,13 +1012,13 @@ Status CreateBasicBatchingSession(
             max_allowed_batch_size, "; expected ",
             schedule_options.max_batch_size);
       }
-      if (schedule_options.max_batch_size != max_allowed_batch_size) {
+      if (schedule_options.max_execution_batch_size != max_allowed_batch_size) {
         return errors::InvalidArgument(
             "Last entry in allowed_batch_sizes must be equal to "
             "max_execution_batch_size; last "
             "entry was ",
             max_allowed_batch_size, "; expected ",
-            schedule_options.max_batch_size);
+            schedule_options.max_execution_batch_size);
       }
     } else if (allowed_batch_sizes.back() != schedule_options.max_batch_size) {
       // TODO(b/b/161641195):

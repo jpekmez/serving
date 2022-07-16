@@ -54,6 +54,26 @@ limitations under the License.
 #include "tensorflow_serving/model_servers/server.h"
 #include "tensorflow_serving/model_servers/version.h"
 
+#if defined(LIBTPU_ON_GCE) || defined(PLATFORM_CLOUD_TPU)
+#include "tensorflow/core/protobuf/tpu/topology.proto.h"
+#include "tensorflow/core/tpu/tpu_global_init.h"
+
+void InitializeTPU(tensorflow::serving::main::Server::Options& server_options) {
+  std::cout << "Initializing TPU system.";
+  tensorflow::tpu::TopologyProto tpu_topology;
+  TF_QCHECK_OK(tensorflow::InitializeTPUSystemGlobally(
+      tensorflow::Env::Default(), &tpu_topology))
+      << "Failed to initialize TPU system.";
+  std::cout << "Initialized TPU topology: " << tpu_topology.DebugString();
+  server_options.num_request_iterations_for_warmup =
+      tpu_topology.num_tpu_devices_per_task();
+  server_options.enforce_session_run_timeout = false;
+  if (server_options.saved_model_tags.empty()) {
+    server_options.saved_model_tags = "tpu,serve";
+  }
+}
+#endif
+
 int main(int argc, char** argv) {
   tensorflow::serving::main::Server::Options options;
   bool display_version = false;
@@ -200,6 +220,10 @@ int main(int argc, char** argv) {
                        "Enables model warmup, which triggers lazy "
                        "initializations (such as TF optimizations) at load "
                        "time, to reduce first request latency."),
+      tensorflow::Flag("num_request_iterations_for_warmup",
+                       &options.num_request_iterations_for_warmup,
+                       "Number of times a request is iterated during warmup "
+                       "replay. This value is used only if > 0."),
       tensorflow::Flag("version", &display_version, "Display version"),
       tensorflow::Flag(
           "monitoring_config_file", &options.monitoring_config_file,
@@ -254,13 +278,17 @@ int main(int argc, char** argv) {
     return -1;
   }
 
+  tensorflow::port::InitMain(argv[0], &argc, &argv);
+#if defined(LIBTPU_ON_GCE) || defined(PLATFORM_CLOUD_TPU)
+  InitializeTPU(options);
+#endif
+
   if (display_version) {
     std::cout << "TensorFlow ModelServer: " << TF_Serving_Version() << "\n"
               << "TensorFlow Library: " << TF_Version() << "\n";
     return 0;
   }
 
-  tensorflow::port::InitMain(argv[0], &argc, &argv);
   if (argc != 1) {
     std::cout << "unknown argument: " << argv[1] << "\n" << usage;
   }

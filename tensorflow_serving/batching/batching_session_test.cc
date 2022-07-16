@@ -199,7 +199,7 @@ int GetPercentileTotal(string label) {
   if (point_set_map.find(label) == point_set_map.end()) return 0;
   const monitoring::PointSet& lps = *point_set_map.at(label);
   for (int i = 0; i < lps.points.size(); ++i) {
-    total_samples += lps.points[i]->percentiles_value.accumulator;
+    total_samples += lps.points[i]->histogram_value.sum();
   }
   return static_cast<int>(total_samples);
 }
@@ -277,7 +277,11 @@ class BatchingSessionTest
     output_options.enable_lazy_split = enable_lazy_split();
     if (enable_large_batch_splitting()) {
       output_options.split_input_task_func = get_split_input_task_func();
+      // Bump up the max batch size, and set execution batch size to the max
+      // size we actually want -- this will allow us to exercise large batch
+      // splits (they trigger when execution_batch_size < max_batch_size).
       output_options.max_execution_batch_size = input_options.max_batch_size;
+      output_options.max_batch_size = input_options.max_batch_size * 2;
     }
     return output_options;
   }
@@ -832,10 +836,13 @@ TEST_P(BatchingSessionTest,
   BatchingSessionOptions batching_session_options;
   batching_session_options.allowed_batch_sizes = {2, 8};  // Final entry != 4.
   std::unique_ptr<Session> batching_session;
-  EXPECT_FALSE(CreateBasicBatchingSession(
-                   schedule_options, batching_session_options, {{"x"}, {"y"}},
-                   CreateHalfPlusTwoSession(), &batching_session)
-                   .ok());
+  auto status = CreateBasicBatchingSession(
+      schedule_options, batching_session_options, {{"x"}, {"y"}},
+      CreateHalfPlusTwoSession(), &batching_session);
+  EXPECT_EQ(status.code(), error::INVALID_ARGUMENT);
+  EXPECT_THAT(status.error_message(), HasSubstr(enable_large_batch_splitting()
+                                                    ? "max_execution_batch_size"
+                                                    : "max_batch_size"));
 }
 
 TEST_P(BatchingSessionTest, DifferentOrderForInputAndOutputTensors) {
